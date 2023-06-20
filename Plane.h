@@ -11,35 +11,36 @@ class Ray;
 class Plane
 {
 
-	// Phương trình mặt phẳng : a(x - x0) + b(y - y0) + c(z - z0) = 0
-	//            ___________________________________________________________
-	// trong đó :| Vec3(a, b, c) là vector pháp tuyến của mặt phẳng (normal) |
-	//           | Vec3(x0, y0, z0) là điểm thuộc mặt phẳng                  |
-	//            ___________________________________________________________
-	// Mặt phẳng có dạng ax + by + cz + d = 0
-	//             ________________________________________________________________________________
-	// trong đó : | Vec3(a, b, c) là vector pháp tuyến của mặt phẳng (normal)                      |
-	//            | d = - (a * x0 + b * y0 + c * z0) với Vec3(x0, y0, z0) là điểm thuộc mặt phẳng  |
-	//              ( d = - VTPT.dot(điểm thuộc mặt phẳng) (d là - (tích vô hướng của VTPT với điểm thuộc mặt phẳng))
-	//             ________________________________________________________________________________
-	// Ta xem mặt phẳng là 1 Vec4(a, b, c, d) 
+	// Plane equation : a(x - x0) + b(y - y0) + c(z - z0) = 0
+	//             ___________________________________________________________
+	// which :    | Vec3(a, b, c) is plane's normal vector                    |
+	//            | Vec3(x0, y0, z0) is a point in the plane                  |
+	//            |___________________________________________________________|
+	// Plane equation : ax + by + cz + d = 0
+	//             ______________________________________________________________________________________________________________________________
+	// which :    | Vec3(a, b, c) is plane's normal vector                                                                                       |
+	//            | d = - (a * x0 + b * y0 + c * z0) which Vec3(x0, y0, z0) is a point in the plane                                              | 
+	//            | ( d = - normal.dot(point in the plane) (d là - (The dot (scalar) product of the normal vector to the point in the plane))    |   
+	//            |______________________________________________________________________________________________________________________________|
+	// We can assume a plane is a Vec4(a, b, c, d) 
 public:
-	//định nghĩa
+	// definition
 	Plane() :normal(Vec3(0, 0, 1)), d(0), normalLength(1), distance(0) {}
-	Plane(float x_, float y_, float z_, float d_);           //ax + by + cz + d = 0
-	Plane(const Vec3& p1, const Vec3& p2, const Vec3& p3);   // lập mặt phẳng từ 3 điểm
-	Plane(const Vec3& normal, const Vec3& point);            // mặt phẳng từ một điểm và vector pháp tuyến
-	Plane(const Vec4& v);                                    // mặt phẳng là 1 vec4(a,b,c,d)
+	Plane(float x_, float y_, float z_, float d_);           // ax + by + cz + d = 0
+	Plane(const Vec3& p1, const Vec3& p2, const Vec3& p3);   // Construct plane from 3 points
+	Plane(const Vec3& normal, const Vec3& point);            // Construct plane from plane's normal and a point
+	Plane(const Vec4& v);                                    // Construct plane as a Vec4
 	~Plane() {};
 
-	// kiểm tra mặt phẳng
+	// check 
 	void printSelf() const;
 
-	// khai báo hàm
+	// setter
 	void set(float a, float b, float c, float d);            // mặt phẳng là Vec4
 	void set(const Vec3& normal, const Vec3& point);         // mặt phẳng từ một điểm và vector pháp tuyến
 	void set(const Vec3& p1, const Vec3& p2, const Vec3& p3);// mặt phẳng từ 3 điểm
 
+	
 	const Vec3& getNormal() const { return normal; }         // lấy VPT của mp
 	float getD() const { return d; }                         // lấy giá trị d
 	float getNormalLength() const { return normalLength; }   // lấy độ dài VTPT của mp
@@ -61,10 +62,10 @@ public:
 
 
 private:
-	Vec3 normal;                                             // VTPT của mặt phẳng
-	float d;                                                 //d = - (a * x0 + b * y0 + c * z0)
-	float normalLength;                                      // độ dài vector pháp tuyến
-	float distance;                                          // khoảng cách từ mặt phẳng tới gốc toạ độ
+	Vec3 normal;                                             // Normal vector of the plane
+	float d;                                                 // d = - (a * x0 + b * y0 + c * z0)
+	float normalLength;                                      // Plane's normal vector's length
+	float distance;                                          // Distance to the Origin
 
 };
 #endif

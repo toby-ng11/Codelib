@@ -84,7 +84,7 @@ Matrix4& Matrix4::inverseEuclidean()
 }
 
 
-// Nghịch đảo ma trận affine
+// Inverse mat4 affine
 Matrix4& Matrix4::inverseAffine()
 {
 	// R^-1
@@ -118,7 +118,7 @@ Matrix4& Matrix4::inverseProjective()
 	Matrix2 d(m[10], m[11], m[14], m[15]);
 
 	// pre-compute repeated parts
-	a.invert();             // A^-1
+	a.inverse();             // A^-1
 	Matrix2 ab = a * b;     // A^-1 * B
 	Matrix2 ca = c * a;     // C * A^-1
 	Matrix2 cab = ca * b;   // C * A^-1 * B
@@ -135,7 +135,7 @@ Matrix4& Matrix4::inverseProjective()
 
 	// compute D' and -D'
 	Matrix2 d1 = dcab;      //  (D - C * A^-1 * B)
-	d1.invert();            //  (D - C * A^-1 * B)^-1
+	d1.inverse();            //  (D - C * A^-1 * B)^-1
 	Matrix2 d2 = -d1;       // -(D - C * A^-1 * B)^-1
 
 	// compute C'
@@ -451,7 +451,26 @@ Matrix4 Matrix4::lookAt(const Vec3& eye, const Vec3& at, const Vec3& up) {
 	return lookAt(eye.x, eye.y, eye.z, at.x, at.y, at.z, up.x, up.y, up.z);
 }
 
+/// <summary>
+/// MATRIX3 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// </summary>
+/// <returns></returns>
 
+Matrix3& Matrix3::transpose()
+{
+	std::swap(m[1], m[3]);
+	std::swap(m[2], m[6]);
+	std::swap(m[5], m[7]);
+
+	return *this;
+}
+
+float Matrix3::getDeterminant() const
+{
+	return m[0] * (m[4] * m[8] - m[5] * m[7]) -
+		m[1] * (m[3] * m[8] - m[5] * m[6]) +
+		m[2] * (m[3] * m[7] - m[4] * m[6]);
+}
 
 Matrix3& Matrix3::inverse()
 {
@@ -490,8 +509,37 @@ Matrix3& Matrix3::inverse()
 	return *this;
 }
 
+Vec3 Matrix3::getAngle() const
+{
+	float pitch, yaw, roll;         // 3 angles
 
-Matrix2& Matrix2::invert()
+	// find yaw (around y-axis) first
+	// NOTE: asin() returns -90~+90, so correct the angle range -180~+180
+	// using z value of forward vector
+	yaw = RAD2DEG * asinf(m[6]);
+	if (m[8] < 0)
+	{
+		if (yaw >= 0) yaw = 180.0f - yaw;
+		else         yaw = -180.0f - yaw;
+	}
+
+	// find roll (around z-axis) and pitch (around x-axis)
+	// if forward vector is (1,0,0) or (-1,0,0), then m[0]=m[4]=m[9]=m[10]=0
+	if (m[0] > -EPSILON && m[0] < EPSILON)
+	{
+		roll = 0;  //@@ assume roll=0
+		pitch = RAD2DEG * atan2f(m[1], m[4]);
+	}
+	else
+	{
+		roll = RAD2DEG * atan2f(-m[3], m[0]);
+		pitch = RAD2DEG * atan2f(-m[7], m[8]);
+	}
+
+	return Vec3(pitch, yaw, roll);
+}
+
+Matrix2& Matrix2::inverse()
 {
 	float determinant = getDeterminant();
 	if (fabs(determinant) <= EPSILON)

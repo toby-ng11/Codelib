@@ -1,87 +1,13 @@
 #include <iostream>
 #include <fstream>
-#include "Collider.h"
 #include "ColliderPhysics.h"
 #include "Quaternion.h"
+#include <stdio.h>
 
 using namespace std;
 
-class Queue {
-	int size;
-	int* queue;
-
-public:
-	Queue() {
-		size = 0;
-		queue = new int[100];
-	}
-	void remove() {
-		if (size == 0) {
-			cout << "Queue is empty" << endl;
-			return;
-		}
-		else {
-			for (int i = 0; i < size - 1; i++) {
-				queue[i] = queue[i + 1];
-			}
-			size--;
-		}
-	}
-	void print() {
-		if (size == 0) {
-			cout << "Queue is empty" << endl;
-			return;
-		}
-		for (int i = 0; i < size; i++) {
-			cout << queue[i] << " <- ";
-		}
-		cout << endl;
-	}
-	//your code goes here
-
-	void add(int x) {
-		queue[size] = x;
-		size++;
-	}
-
-	Queue operator+(Queue q) {
-
-	}
-
-};
-
-
-
 int main()
 {
-	Queue q;
-	q.add(42); q.add(2); q.add(8); q.add(1);
-	q.print();
-	q.remove();
-	q.add(128);
-	q.print();
-	q.remove();
-	q.remove();
-	q.print();
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	/* ofstream file;
 	file.open("SpherePlane.csv");
 
@@ -138,6 +64,35 @@ int main()
 	Body Ball2(Vec3(0.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 0.0f), Vec3(0, 0, 0), 10.0f);
 	cout << "\n";
 	c.SphereSphereCollisionResponse(Ball1, Ball2, 0.9f); */
+	
+	/*
+	Matrix3 I1 = { 20.0f, 0.0f, 0.0f, 0.0f, 40.0f, 0.0f, 0.0f, 0.0f, 20.0f };
+	Matrix3 I2 = { 0.1f, 0.0f, 0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f, 0.1f };
+
+	Vec3 n(2.0f / 3.0f, 1.0f / 3.0f, 2.0f / 3.0f);
+	Vec3 r1(-8.0f, 1.0f, 0.0f), r2(2.0f, -1.0f, 0.0f);
+	Vec3 v1i(0.0f, 0.0f, 0.0f), v2i(20000.0f, 10000.0f, 20000.0f);
+
+	float m1 = 100.0f, m2 = 1.0f, e = 0.5f;
+
+	float vr = n.dot(v1i - v2i);
+
+	float numerator = -vr * (e + 1.0f);
+	float denominator = 1.0f / m1 + 1.0f / m2 + n.dot((I1.inverse() * r1.cross(n)).cross(r1)) + n.dot((I2.inverse() * r2.cross(n)).cross(r2));
+	float J = numerator / denominator; cout << "J = " << J << endl;
+
+	Vec3 v_ship = v1i + J * n / m1; cout << "Starship's linear velocity = " << v_ship << endl;
+	Vec3 angular_ship = v1i + I1 * r1.cross(J * n); cout << "Starship's angular velocity = " << angular_ship << endl;
+	*/
+
+	Vec3 up(0.0f, 1.0f, 0.0f), object_vel(1.0f, 0.0f, 0.0f);
+	Vec3 rotationAxis = up.cross(object_vel); rotationAxis.normalize(); cout << rotationAxis << endl;
+	Vec3 angularVec = rotationAxis * object_vel.length(); cout << angularVec << endl;
+	Quaternion angularVecQuat(0.0f, angularVec); cout << angularVecQuat << endl;
+	Quaternion q(up, -45.0f); cout << q << endl;
+	Quaternion newQuat(0.0f, 0.0f, 0.0f, 0.0f);
+	newQuat += q * angularVecQuat*0.5f; cout << newQuat << endl;
+
 
 
 	cout << "\n\n\nCreated by Tue Nguyen - N01303773" << endl;
