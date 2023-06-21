@@ -12,15 +12,15 @@ class Plane;
 
 class Ray
 {
-	// Phương trình tham số của đườnng thẳng :| x = x0 + at
+	// Ray's parametric equation :            | x = x0 + at
 	//                                        | y = y0 + bt
 	//                                        | z = z0 + ct
-	// Phương trình chính tắc của đường thẳng : (x - x0) / a = (y - y0) / b = (z - z0) / c
-	//             _________________________________________________________________
-	// trong đó : |  Vec3(x0, y0, z0) là điểm thuộc đường thăng (point)             |
-	//            |  Vec3(a, b, c) là vector chỉ phương của đường thẳng (direction) |
-	//             _________________________________________________________________
-	// gọi p (point) = Vec3(x0, y0, z0), v (direction) = Vec3(a, b, c) ta có phương trình đường thẳng | d = p + vt  |
+	// Ray's canonical equation : (x - x0) / a = (y - y0) / b = (z - z0) / c
+	//             _____________________________________________________
+	// which :    |  Vec3(x0, y0, z0) is a point in the ray (p)         |
+	//            |  Vec3(a, b, c) is direction vector of the ray (v)   |
+	//            |_____________________________________________________|
+	// we have p (point) = Vec3(x0, y0, z0), v (direction) = Vec3(a, b, c) we have this ray equation | d = p + vt  |
 public:
 	// khai báo các kiểu con đà điểu
 	Ray() :point(Vec3(0, 0, 0)), direction(Vec3(0, 0, 0)) {}                //d = p + vt   //constructor
@@ -46,7 +46,7 @@ public:
 	Vec3 currentPosition(const float t) const;
 	Vec3 intersect(const Ray& ray) const;                                   // đường thẳng giao đường thẳng
 	bool isIntersected(const Ray& ray) const;
-	Vec3 projectPoint(const Vec3& p) const;                                   // hình chiếu của điểm lên đường thẳng
+	Vec3 projectPoint(const Vec3& p) const;                                 // hình chiếu của điểm lên đường thẳng
 
 
 private:
