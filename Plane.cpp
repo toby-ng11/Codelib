@@ -1,24 +1,24 @@
 ﻿#include "Plane.h"
 
-// Plane equation: ax + by + cz + d = 0
+// Plane equation: ax + by + cz + d = 0.
 Plane::Plane(float x_, float y_, float z_, float d_)
 {
 	set(x_, y_, z_, d_);
 }
 
-// Construct plane from 3 points
+// Construct plane from 3 points.
 Plane::Plane(const Vec3& p1, const Vec3& p2, const Vec3& p3)
 {
 	set(p1, p2, p3);
 }
 
-// Construct plane from plane's normal and a point
+// Construct plane from plane's normal and a point.
 Plane::Plane(const Vec3& normal, const Vec3& point)
 {
 	set(normal, point);
 }
 
-// Construct plane as a Vec4
+// Construct plane as a Vec4.
 Plane::Plane(const Vec4& v)
 {
 	normal.set(v.x, v.y, v.z);
@@ -27,14 +27,14 @@ Plane::Plane(const Vec4& v)
 	distance = -d / normalLength;
 }
 
-// Check plane
+// Print plane.
 void Plane::printSelf() const
 {
 	cout << "Plane(" << normal.x << ", " << normal.y << ", " << normal.z
 		<< ", " << d << ")" << endl;
 }
 
-// Set plane as a Vec4
+// Set plane as a Vec4.
 void Plane::set(float a, float b, float c, float d)
 {
 	normal.set(a, b, c);
@@ -45,7 +45,7 @@ void Plane::set(float a, float b, float c, float d)
 	distance = -d / normalLength;
 }
 
-// Set plane from plane's normal vec and a point in the plane
+// Set plane from plane's normal vec and a point in the plane.
 void Plane::set(const Vec3& normal, const Vec3& point)
 {
 	this->normal = normal;
@@ -54,7 +54,7 @@ void Plane::set(const Vec3& normal, const Vec3& point)
 	distance = -d / normalLength;
 }
 
-// Set plane from 3 points
+// Set plane from 3 points.
 void Plane::set(const Vec3& p1, const Vec3& p2, const Vec3& p3)
 {
 	Vec3 a = p2 - p1;
@@ -65,7 +65,7 @@ void Plane::set(const Vec3& p1, const Vec3& p2, const Vec3& p3)
 	distance = -d / normalLength;
 }
 
-// Get the distance from plane to a point
+// Get the distance from plane to a point.
 float Plane::getDistance(const Vec3& point) const
 {   
 	// M is a point, Alpha is a plane, H is the projection of M onto the plane Alpha.
@@ -76,7 +76,7 @@ float Plane::getDistance(const Vec3& point) const
 	return (dot + d) / normalLength;
 }
 
-// Get the angle between plane and a ray
+// Get the angle between plane and a ray.
 float Plane::getAngle(const Ray& ray) const
 {   
 	// u is ray direction, n is plane's normal
@@ -88,7 +88,7 @@ float Plane::getAngle(const Ray& ray) const
 	return asinf(sinAngle);
 }
 
-// Normalize plane
+// Normalize plane.
 void Plane::normalize()
 {
 	float lengthInv = 1.0f / normalLength;
@@ -98,7 +98,7 @@ void Plane::normalize()
 	distance = -d;
 }
 
-// Check if plane intersect with ray
+// Check if plane intersect with ray.
 bool Plane::isIntersected(const Ray& ray) const
 {
 	// direction vector of line
@@ -111,7 +111,7 @@ bool Plane::isIntersected(const Ray& ray) const
 	else return true;
 }
 
-// Plane intersects ray (return a point)
+// Plane intersects ray (return a point).
 Vec3 Plane::intersect(const Ray& ray) const
 {   
 	// Ray d = p + vt, p is a point on ray, v is direction of ray
@@ -132,7 +132,7 @@ Vec3 Plane::intersect(const Ray& ray) const
 	else return Vec3(NAN, NAN, NAN);
 }
 
-// Check if plane intersect with plane
+// Check if plane intersect with plane.
 bool Plane::isIntersected(const Plane& plane) const
 {
 	// check if 2 plane normals are same direction
@@ -141,7 +141,7 @@ bool Plane::isIntersected(const Plane& plane) const
 	else return true;
 }
 
-// Plane intersects plane (return a ray)
+// Plane intersects plane (return a ray).
 Ray Plane::intersect(const Plane& plane) const
 {
 	if (isIntersected(plane))
@@ -161,42 +161,40 @@ Ray Plane::intersect(const Plane& plane) const
 	else return Ray(Vec3(NAN, NAN, NAN), Vec3(NAN, NAN, NAN));
 }
 
-// Return a point's projection on a plane
+// Return a point's projection on a plane.
 Vec3 Plane::projectPoint(const Vec3& p) const
 {
-	// B1: Construct a ray d go through M has u == n, u is ray direction, n is plane's normal
+	// Construct a ray d go through M has u == n, u is ray direction, n is plane's normal.
 	Ray d = Ray(p, this->normal);
 
-	// B2: Projection is the intersect point between ray d and the plane
-	Vec3 H = this->intersect(d);
-
-	return H;
+	// Projection is the intersect point between ray d and the plane.
+    return this->intersect(d);
 }
 
 
-// Return a vector's projection on a plane
+// Return a vector's projection on a plane.
 Vec3 Plane::projectVec(const Vec3& v) const
 {
-	//Find projection of vector A on plane's normal vector 
+	// Find projection of vector A on plane's normal vector.
 	Vec3 n = this->normal;
 	Vec3 A2 = n.project(v);
 
-	//B2: Result = vector A - projection vector
+	// Result = vector A - projection vector.
 	return v - A2;
 }
 
-// Return a ray's projection on a plane
+// Return a ray's projection on a plane.
 Ray Plane::projectRay(const Ray& ray) const
 {
-	// B1: Find vector n1 = cross product(u (ray direction), n (this plane's normal))
-	// B2: Construct a plane Q has point M (point on ray) and n1 as plane's normal
-	// B3: Projection is the intersect ray between plane Q and this plane. 
+	// Find vector n1 = cross product(u (ray direction), n (this plane's normal)).
 	Vec3 M = ray.getPoint();
 	Vec3 u = ray.getDirection();
 	Vec3 n = this->normal;
 
+	// Construct a plane Q has point M (point on ray) and n1 as plane's normal.
 	Vec3 n1 = u.cross(n);
 	Plane Q = Plane(n1, M);
-	Ray projection = this->intersect(Q);
-	return projection;
+
+	// Projection is the intersect ray between plane Q and this plane. 
+	return this->intersect(Q);
 }

@@ -12,17 +12,17 @@ class Sphere
 {
 public:
 
-	// Phương trình chính tắc mặt cầu : (x - a)^2 + (y - b)^2 + (z - c)^2 = r^2        (r > 0)
-	//                 __________________________________
-	// trong đó :     |  Vec3(a, b, c) là tâm mặt cầu    |
-	//                |  r là bán kính mặt cầu           |
-	//                 __________________________________
+	// Sphere's canonical equation : (x - a)^2 + (y - b)^2 + (z - c)^2 = r^2        (r > 0)
+	//                 _______________________________________________
+	// which:         |  Vec3(a, b, c) is center point of the sphere  |
+	//                |  r is sphere radius                           |
+	//                |_______________________________________________|
 	//
-	// Phương trình tổng quát : x^2 + y^2 + z^2 - 2ax - 2by - 2cz + d = 0 
-	// trong đó        |  d = a^2 + b^2 + c^2 - r^2       |
+	// phere's general equation : x^2 + y^2 + z^2 - 2ax - 2by - 2cz + d = 0 
+	// which:        |  d = a^2 + b^2 + c^2 - r^2       |
 
 	Sphere() :position(Vec3(0, 0, 0)), radius(1), distance(0) {};
-	Sphere(const Vec3& position_, float radius_);                             // lập mặt cầu từ tâm, bán kính
+	Sphere(const Vec3& position_, float radius_);                             // Construct sphere from 
 	Sphere(const Vec3& position, const Vec3& point);                          // lập mặt cầu từ tâm và một điểm thuộc mặt cầu
 	//Sphere(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec3& p4); // lập mặt cầu từ bốn điểm
 	~Sphere() {}

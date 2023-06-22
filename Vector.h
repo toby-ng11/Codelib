@@ -151,61 +151,61 @@ public:
 
 //////////////////////////////////////////// Toán tử /////////////////////////////////////////////////
 
-// Gán vector
+// Assign vector
 inline Vec2 Vec2::operator=(const Vec2& v) {
 	set(v.x, v.y);
 	return *this;
 }
 
-// Lấy vector đối
+// - Vec2
 inline Vec2 Vec2::operator-() const { return Vec2(-x, -y); };
 
-// Cộng 2 vector
+// Vec2 + Vec2
 inline Vec2 Vec2::operator+(const Vec2& v) const { return Vec2(x + v.x, y + v.y); }
 
-// Trừ 2 vector
+// Vec2 - Vec2
 inline Vec2 Vec2::operator-(const Vec2& v) const { return Vec2(x - v.x, y - v.y); }
 
-// Cộng vector với chính vector đó
+// Vec2 += Vec2
 inline Vec2& Vec2::operator+=(const Vec2& v) { x += v.x; y += v.y; return *this; }
 
-// Trừ vector với chính vector đó
+// Vec2 -= Vec2
 inline Vec2& Vec2::operator-=(const Vec2& v) { x -= v.x; y -= v.y; return *this; }
 
-// Nhân với 1 số
+// Vec2 * number
 inline Vec2 Vec2::operator*(const float s) const { return Vec2(x * s, y * s); }
 
-// Nhân chính vector đó với 1 số
+// Vec2 *= number
 inline Vec2& Vec2::operator*=(const float s) { x *= s; y *= s; return *this; }
 
-// Chia 1 số
+// Vec2 / number
 inline Vec2 Vec2::operator/(const float s) const { return Vec2(x / s, y / s); }
 
-// Chia chính vector đó với 1 số
+// Vec2 /= number
 inline Vec2& Vec2::operator/=(const float s) { x /= s; y /= s; return *this; }
 
-// So sánh bằng
+// Vec2 == Vec2 ?
 inline bool Vec2::operator==(const Vec2& v) const { return (x == v.x) && (y == v.y); }
 
-// So sánh khác
+// Vec2 != Vec2 ?
 inline bool Vec2::operator!=(const Vec2& v) const { return (x != v.x) || (y != v.y); }
 
-// So sánh hơn
+// Vec2 < Vec2 ?
 inline bool Vec2::operator<(const Vec2& v) const { return (x < v.x) && (y < v.y); }
 
-// Tích vô hướng
+// Dot (scalar) product
 inline float Vec2::operator*(const Vec2& v) const { return x * v.x + y * v.y; }
 
-// Mảng vector
+// Vector array
 inline float Vec2::operator[](int index) const { return (&x)[index]; }
 
-// Mảng vector
+// Vector array
 inline float& Vec2::operator[](int index) { return (&x)[index]; }
 
-// Nhân 1 số với vector
+// number * Vec2
 inline Vec2 operator*(const float s, const Vec2 v) { return Vec2(s * v.x, s * v.y); }
 
-// In vector
+// Print self
 inline ostream& operator<<(ostream& os, const Vec2& v) {
 	os << "(" << v.x << ", " << v.y << ")";
 	return os;
@@ -215,13 +215,13 @@ inline ostream& operator<<(ostream& os, const Vec2& v) {
 
 inline void Vec2::set(float x, float y) { this->x = x; this->y = y; }
 
-// Độ dài vector
+// Get vector lenght
 inline float Vec2::length() const { return sqrtf(x * x + y * y); }
 
-// Khoảng cách giữa 2 vector
+// Distance between vector
 inline float Vec2::distance(const Vec2& v) const { return sqrtf((v.x - x) * (v.x - x) + (v.y - y) * (v.y - y)); }
 
-// Chuẩn hoá
+// Normalize vector
 inline Vec2& Vec2::normalize() {
 	float m = this->length();
 	x /= m;
@@ -229,7 +229,7 @@ inline Vec2& Vec2::normalize() {
 	return *this;
 }
 
-// Tích vô hướng
+// Dot (scalar) product
 inline float Vec2::dot(const Vec2& v) const { return *this * v; }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

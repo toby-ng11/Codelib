@@ -49,10 +49,10 @@ public:
 	
 	void normalize();                                        // Normalize plane
 
-	bool isIntersected(const Ray& ray) const;                // Check if plane intersect with ray
+	bool isIntersected(const Ray& ray) const;                // Check if plane intersects with ray
 	Vec3 intersect(const Ray& ray) const;                    // Plane intersects ray (return a point)
 
-	bool isIntersected(const Plane& plane) const;            // Check if plane intersect with plane
+	bool isIntersected(const Plane& plane) const;            // Check if plane intersects with plane
 	Ray intersect(const Plane& plane) const;                 // Plane intersects plane (return a ray)
 
 	Vec3 projectPoint(const Vec3& p) const;                  // Return a point's projection on a plane

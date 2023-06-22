@@ -1,35 +1,42 @@
 ﻿#include "Ray.h"
 
-/*Ray::Ray(const Vec3& p1, const Vec3& p2)
-{
-	set2P(p1, p2);
-}*/
-
-void Ray::set(const Vec3& p, const Vec3 v)
+// Set ray from a point and a direction vector.
+void Ray::set(const Vec3& p, const Vec3& v)
 {
 	this->direction = v;
 	this->point = p;
 }
 
-/*void Ray::set2P(const Vec3& p1, const Vec3& p2)
+// Print ray.
+void Ray::printSelf()
 {
-	this->direction = p2 - p1;
-	this->point = p1;
-
-}*/
-
-// Khoảng cách từ điểm đến đường thằng
-float Ray::getDistance(const Vec3& p) const
-{
-	// Khoảng cách từ điểm A đến đường thẳng d = |[MA , u]|/|u| , u là VTCP, M là điểm thuộc đường thẳng, A là điểm bất kì
-	return ((p - this->point).cross(this->direction)).length() / this->direction.length();
-
+	cout << "Ray: " << this->point << " + " << this->direction << "t" << endl;
 }
 
-// khoảng cách giữa hai đường thẳng chéo nhau 
+// Distance from a point to a ray.
+float Ray::getDistance(const Vec3& p) const
+{
+	/* Distance from a point A to a ray(d) = | [MA, u]|/|u |
+	which u is direction vector of ray (d), M is a point on ray (d) */
+	return ((p - this->point).cross(this->direction)).length() / this->direction.length();
+}
+
+// Check if ray intersects with ray.
+bool Ray::isIntersected(const Ray& ray) const
+{
+	// If 2 rays is parallel, [u1, u2] = 0
+	Vec3 v = this->direction.cross(ray.getDirection());
+	if (v == 0)
+		return false; // (coincide, cross, or parallel)
+	else
+		return true; // intersect
+}
+
+// Distance between two rays (no intersect).
 float Ray::getDistance(const Ray& r) const
 {
-	// d = |[u , v].MM'| / |[u , v]| u, v lần lượt là VTCP của 2 đường thẳng; M, M' lllà điểm thuộc 2 đường thẳng
+	/* d = | [u, v].MM'| / |[u , v]|
+	u, v are direction vectors of two rays, respectively. M and M' are point on two rays, respectively. */
 	if (isIntersected(r)) return 0.0f;
 	else
 	{
@@ -40,67 +47,64 @@ float Ray::getDistance(const Ray& r) const
 	}
 }
 
-// In đường thẳng
-void Ray::printSelf()
+// Check if a point is belong to a ray.
+bool Ray::isBelongTo(const Vec3& p) const
 {
-	cout << "Ray: " << this->point << " + " << this->direction << "t" << endl;
+	if (this->getDistance(p) == 0) return true;
+	else return false;
 }
 
-/*Where are we along the Ray?
-Calculate posotion = start + dir*t */
+// Return a point from ray with t
 Vec3 Ray::currentPosition(const float t) const
 {
 	return point + direction * t;
 }
 
-// Đường thẳng giao đường thẳng
+// Ray intersects with ray (return a point).
 Vec3 Ray::intersect(const Ray& ray) const
 {
 	const Vec3 v2 = ray.getDirection();
 	const Vec3 p2 = ray.getPoint();
-	Vec3 result = Vec3(NAN, NAN, NAN);    // default with NaN
+	Vec3 result = Vec3(NAN, NAN, NAN);
 
-	// find v3 = (p2 - p1) x V2
-	Vec3 v3 = (p2 - point).cross(v2);
+	if (isIntersected(ray)) {
 
-	// find v4 = V1 x V2
-	Vec3 v4 = direction.cross(v2);
+	    // Find a = [(p2 - p1), v2]
+		Vec3 a = (p2 - point).cross(v2);
 
-	// if both V1 and V2 are same direction, return NaN point
-	if (v4.x == 0 && v4.y == 0 && v4.z == 0)
+		// Find b = [V1, V2] 
+		Vec3 b = direction.cross(v2);
+
+		// find t = a / b
+		float alpha = 0;
+		if (b.x != 0) alpha = a.x / b.x;
+		else if (b.y != 0) alpha = a.y / b.y;
+		else if (b.z != 0) alpha = a.z / b.z;
+		else return result;
+
+		// find intersect point
+		result = currentPosition(alpha);
 		return result;
-
-	// find a = (p2-p1)xV2 / (V1xV2)
-	float alpha = 0;
-	if (v4.x != 0) alpha = v3.x / v4.x;
-	else if (v4.y != 0) alpha = v3.y / v4.y;
-	else if (v4.z != 0) alpha = v3.z / v4.z;
+	}
 	else return result;
-
-	// find intersect point
-	result = currentPosition(alpha);
-	return result;
 }
 
-// Vị trí tương đối của 2 đường thẳng
-bool Ray::isIntersected(const Ray& ray) const
-{
-	// nếu 2 đường thẳng song song, [u1 , u2] = 0
-	Vec3 v = this->direction.cross(ray.getDirection());
-	if (v == 0)
-		return false; // (trùng nhau, chéo nhau, song song)
-	else
-		return true; // cắt nhau
-}
-
-// Tìm hình chiếu của điểm lên đường thẳng
+// Return a point's projection on a ray.
 Vec3 Ray::projectPoint(const Vec3& p) const
 {
-	//B1: lập mặt phẳng P chứa điểm A và vuông góc d (có VTPT n là VTCP u của đường thẳng
-	//B2: H là giao điểm của d và P
+	// Construct a plane (P) has point A and perpendicular with ray (d) (which has plane's normal vector is ray's direction vector)
 	Ray d = Ray(this->getPoint(), this->getDirection());
 	Plane P = Plane(this->direction, p);
-	Vec3 H = P.intersect(d);
-	return H;
+
+	// The projection point is the intersection between ray (d) and plane (P) 
+	return P.intersect(d);
 }
 
+// Construct ray from 2 points
+Ray Ray::fromTwoPoint(const Vec3& p1, const Vec3& p2)
+{
+	Ray d;
+	d.direction = p2 - p1;
+	d.point = p1;
+	return d;
+}
